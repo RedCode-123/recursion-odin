@@ -47,18 +47,79 @@ function mergeSort(arr){
   } else if(arr.length === 2 && arr[1] >= arr[0]){
     return [arr[0], arr[1]]
   }
-  for(let y = 0; y < arr.length; y++) {
-     for(let x = 0; x < arr.length-2; x++){
-      [arr[x], arr[x+1]] = mergeSort([arr[x], arr[x+1]]);
+  for(r = 0; r < arr.length; r++){
+  for(x = 0; x < arr.length; x++){
+    if(r==x) continue
+    if((x+1) === arr.length) {
+      [arr[0], arr[x]] = mergeSort([arr[0],arr[x]]);
+    } else {
+          [arr[x], arr[x+1]] = mergeSort([arr[x],arr[x+1]]);
     }
-     for(let z = arr.length-1; z >= 1 ; z--){
-      [arr[z-1], arr[z]] = mergeSort([arr[z-1], arr[z]]);
-    }
+  }
   }
 
   return arr;
 }
 
-console.log("Sorting array elements:\n",
-  mergeSort([3, 2, 1, 13, 8, 5, 0, 1]) // [0, 1, 1, 2, 3, 5, 8, 13]
-);
+function cutArrHalf(arr){
+  let leftSide, rightSide
+  // split arr
+  if(arr.length%2 === 0){
+    let half = arr.length/2;
+    leftSide = arr.slice(0, half);
+    rightSide = arr.slice(half);
+  } else {
+    let extra= arr.length%2;
+    let unevenHalf = ((arr.length-extra)/2)+1
+    leftSide = arr.slice(0, unevenHalf);
+    rightSide = arr.slice(unevenHalf);
+  }
+  return [leftSide, rightSide]
+}
+
+function merge() {
+  //Merge
+  let halfs = cutArrHalf(arr)
+  // let tempArr=[];
+   let halfl = [...halfs[0]];
+   let halfr = [...halfs[1]];
+      let i = 0, j = 0, k= 0;
+  while(i < halfl.length && j < halfr.length){
+      if(halfl[i] < halfr[j]) {
+          halfs[k] = halfl[i];
+          i++;
+      } else {
+          halfs[k] = halfr[j];
+          j++;
+
+      }
+      k++;
+  }
+  if(halfl.length > halfr.length) {
+      halfs[halfl.length-1] =  halfl[halfl.length-1];
+  }
+    return [...halfl,...halfr];
+}
+
+function sort(arr){
+  //base case
+  if(arr.length === 1){
+    // console.log(arr)
+    return arr;
+  } else {
+      let mergeArr = mergeSort(arr);
+      merge(mergeArr);
+  }
+}
+
+let arr1 = [8,230,756, 777, 611, 10, -78, -15];
+console.log(
+    "Merge sort (Even array):\n",
+    mergeSort(arr1)
+)
+
+let arr2 = [-8, -273,56, 77, 11, 18, 93];
+console.log(
+    "Merge sort (odd array):\n",
+    mergeSort(arr2)
+)
